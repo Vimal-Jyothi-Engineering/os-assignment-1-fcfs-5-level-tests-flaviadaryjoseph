@@ -14,6 +14,7 @@ int main() {
 
     Process p[n];
 
+    // Read input
     for (int i = 0; i < n; i++) {
         scanf("%s %d %d", p[i].pid, &p[i].at, &p[i].bt);
     }
@@ -29,18 +30,15 @@ int main() {
         }
     }
 
-    int current_time = 0;
+    // FCFS Calculation (Cumulative Burst Time Method)
+    if (n > 0) {
+        p[0].wt = 0;
+        p[0].tat = p[0].bt;
 
-    for (int i = 0; i < n; i++) {
-
-        if (current_time < p[i].at) {
-            current_time = p[i].at;
+        for (int i = 1; i < n; i++) {
+            p[i].wt = p[i - 1].wt + p[i - 1].bt;
+            p[i].tat = p[i].wt + p[i].bt;
         }
-
-        p[i].wt = current_time - p[i].at;
-        p[i].tat = p[i].wt + p[i].bt;
-
-        current_time += p[i].bt;
     }
 
     double total_wt = 0, total_tat = 0;
@@ -53,6 +51,7 @@ int main() {
     double avg_wt = total_wt / n;
     double avg_tat = total_tat / n;
 
+    // Output in EXACT required format
     printf("Waiting Time:\n");
     for (int i = 0; i < n; i++) {
         printf("%s %d\n", p[i].pid, p[i].wt);
